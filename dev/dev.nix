@@ -1,14 +1,54 @@
 { config, pkgs, lib, ... }:
 {
   home.packages = with pkgs; [
+    # Core dev tools
     git
     gcc
+    gnumake
+    cmake
     bun
-    opencode
-    claude-code
+
+    # Language runtimes
+    nodejs
+    python3
+    rustup
+    go
+
+    # Editors / IDEs
     neovim
     vscodium
+
+    # AI coding assistants
+    opencode
+    claude-code
+
+    # CLI productivity
+    ripgrep
+    fd
+    fzf
+    bat
+    eza
+    jq
+    btop
+    htop
+
+    # Dev utilities
+    gh
+    lazygit
+    tmux
+    delta
+    nil
+    alejandra
   ];
+
+  home.sessionPath = [ "$HOME/.local/bin" "$HOME/go/bin" ];
+
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+    PAGER = "bat";
+    BAT_THEME = "Dracula";
+  };
 
   home.activation.setupNvim = lib.hm.dag.entryAfter ["writeBoundary"] ''
     if [ ! -d "$HOME/.config/nvim" ]; then

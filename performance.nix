@@ -32,5 +32,10 @@
     dates = "weekly";
   };
 
-
+  # INFO: ============================================================================
+  # SECTION 4: ZRAM
+  # ============================================================================
+  # Compressed swap in RAM — reduces disk I/O and improves responsiveness
+  zramSwap.enable = true;
+  zramSwap.memoryPercent = 50;
 }

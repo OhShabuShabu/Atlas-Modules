@@ -9,6 +9,9 @@
       virtualisation = import ./virtualisation.nix;
       minecraft = import ./minecraft.nix;
       flatpak = import ./flatpak.nix;
+      bluetooth = import ./bluetooth.nix;
+      pdf = import ./pdf.nix;
+      art = import ./art/art.nix;
 
       default = self.nixosModules.performance;
     };

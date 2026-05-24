@@ -16,5 +16,18 @@
     mangohud
     goverlay
     parsec-bin
+
+    # Game launchers
+    lutris
+    heroic
+    bottles
+
+    # Wine / Proton tools
+    winetricks
+    protontricks
+
+    # Performance & compatibility
+    gamescope
+    protonup-qt
   ];
 }

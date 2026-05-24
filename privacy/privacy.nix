@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   username = "yusa";
@@ -7,11 +7,49 @@ let
   notifyUser = notifications.notifyScript;
 in
 {
+  # ============================================================================
+  # FIREWALL
+  # ============================================================================
+  networking.firewall.enable = lib.mkDefault true;
+
+  # ============================================================================
+  # DNS PRIVACY
+  # ============================================================================
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+    dnsovertls = "true";
+    fallbackDns = [ "1.1.1.1" "9.9.9.9" ];
+  };
+
+  # ============================================================================
+  # KERNEL HARDENING
+  # ============================================================================
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.rp_filter" = 1;
+    "net.ipv4.conf.default.rp_filter" = 1;
+    "net.ipv4.tcp_syncookies" = 1;
+    "kernel.kptr_restrict" = 2;
+    "kernel.dmesg_restrict" = 1;
+    "kernel.printk" = "3 3 3 3";
+    "kernel.unprivileged_bpf_disabled" = 1;
+    "net.core.bpf_jit_harden" = 2;
+  };
+
+  # ============================================================================
+  # PRIVACY PACKAGES
+  # ============================================================================
   environment.systemPackages = with pkgs; [
     mullvad-vpn
     mullvad-browser
     notifyUser
     nftables
+    mat2
+    bleachbit
+    keepassxc
+    tor
+    torsocks
+    libnotify
   ];
   services.mullvad-vpn.enable = true;
   systemd.services.mullvad-daemon = {

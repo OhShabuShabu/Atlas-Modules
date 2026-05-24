@@ -16,5 +16,8 @@
 
     # Blockbench (3D modeling for Minecraft)
     blockbench
+
+    # MCEdit-like region-file editor
+    mcaselector
   ];
 }
