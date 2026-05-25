@@ -14,6 +14,13 @@
       art = import ./art/art.nix;
       extras = import ./extras.nix;
 
+      # GPU initrd modules — each includes only its own GPU's firmware
+      # in initrd, keeping /boot from filling up. Installer auto-detects
+      # hardware and downloads the matching module.
+      gpu-amd    = import ./gpu-amd.nix;
+      gpu-intel  = import ./gpu-intel.nix;
+      gpu-nvidia = import ./gpu-nvidia.nix;
+
       default = self.nixosModules.performance;
     };
 
