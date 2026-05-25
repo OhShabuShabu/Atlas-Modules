@@ -12,6 +12,7 @@
       bluetooth = import ./bluetooth.nix;
       pdf = import ./pdf.nix;
       art = import ./art/art.nix;
+      extras = import ./extras.nix;
 
       default = self.nixosModules.performance;
     };
