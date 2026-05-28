@@ -1,34 +1,40 @@
 {
-  description = "Atlas optional NixOS modules — gaming, privacy, dev tools, and more";
+  description = "Atlas optional NixOS modules — gaming, privacy, dev tools, performance, and more";
 
-  outputs = { self }: {
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+  };
+
+  outputs = { self, nixpkgs }: {
     nixosModules = {
-      performance = import ./performance.nix;
-      privacy = import ./privacy/privacy.nix;
-      gaming = import ./gaming/gaming.nix;
-      virtualisation = import ./virtualisation.nix;
-      minecraft = import ./minecraft.nix;
-      flatpak = import ./flatpak.nix;
-      bluetooth = import ./bluetooth.nix;
-      pdf = import ./pdf.nix;
-      art = import ./art/art.nix;
-      extras = import ./extras.nix;
+      performance   = import ./modules/nixos/performance.nix;
+      privacy       = import ./modules/nixos/privacy.nix;
+      gaming        = import ./modules/nixos/gaming.nix;
+      virtualisation = import ./modules/nixos/virtualisation.nix;
+      minecraft     = import ./modules/nixos/minecraft.nix;
+      flatpak       = import ./modules/nixos/flatpak.nix;
+      bluetooth     = import ./modules/nixos/bluetooth.nix;
+      pdf           = import ./modules/nixos/pdf.nix;
+      art           = import ./modules/nixos/art.nix;
+      extras        = import ./modules/nixos/extras.nix;
 
-      # GPU initrd modules — each includes only its own GPU's firmware
-      # in initrd, keeping /boot from filling up. Installer auto-detects
-      # hardware and downloads the matching module.
-      gpu-amd    = import ./gpu-amd.nix;
-      gpu-intel  = import ./gpu-intel.nix;
-      gpu-nvidia = import ./gpu-nvidia.nix;
+      gpu-amd       = import ./modules/nixos/gpu-amd.nix;
+      gpu-intel     = import ./modules/nixos/gpu-intel.nix;
+      gpu-nvidia    = import ./modules/nixos/gpu-nvidia.nix;
 
-      default = self.nixosModules.performance;
+      security      = import ./modules/nixos/security.nix;
+      shell         = import ./modules/nixos/shell.nix;
+      fonts         = import ./modules/nixos/fonts.nix;
+      media         = import ./modules/nixos/media.nix;
+
+      default = import ./modules/nixos/default.nix;
     };
 
     homeModules = {
-      dev = import ./dev/dev.nix;
-      tools = import ./tools.nix;
+      dev   = import ./modules/home/dev.nix;
+      tools = import ./modules/home/tools.nix;
 
-      default = self.homeModules.dev;
+      default = import ./modules/home/default.nix;
     };
   };
 }

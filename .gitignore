@@ -1,2 +1,12 @@
-result/
+# Nix build artifacts
+result*
+.direnv/
+
+# Editor
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db

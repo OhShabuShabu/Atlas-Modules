@@ -1,7 +1,14 @@
+# ============================================================================
+# MODULE: tools
+# CATEGORY: tools
+# VERSION: 1.1.0
+# TAGS: media downloader tools utilities
+# DEPS: none
+# INFO: Core CLI utilities: yt-dlp, mpv, btop, ripgrep, bat, and more
+# ============================================================================
 { pkgs, ... }:
 
 {
-  # Core utilities
   home.packages = with pkgs; [
     python3Packages.requests
     yt-dlp

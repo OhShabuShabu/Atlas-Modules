@@ -1,4 +1,13 @@
+# ============================================================================
+# MODULE: flatpak
+# CATEGORY: system
+# VERSION: 1.0.0
+# TAGS: flatpak flathub
+# DEPS: none
+# INFO: Flatpak with Flathub repository
+# ============================================================================
 { config, pkgs, ... }:
+
 {
   services.flatpak.enable = true;
 
@@ -15,5 +24,4 @@
       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     '';
   };
-
 }
