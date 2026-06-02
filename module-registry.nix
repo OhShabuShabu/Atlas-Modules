@@ -260,6 +260,19 @@ let
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}media.nix";
     };
+
+    "20" = {
+      name = "odysseus";
+      description = "Odysseus self-hosted AI workspace";
+      info = "Odysseus: Docker-based AI workspace with chat, agents, deep research, email, memory, and RAG. Runs with chromadb, searxng, and ntfy support services.";
+      file = "odysseus.nix";
+      subdir = "nixos";
+      category = "services";
+      tags = [ "ai" "workspace" "docker" "chat" "agents" ];
+      deps = [ ];
+      version = "1.0.0";
+      url = "${baseUrl}/${moduleDir "nixos"}odysseus.nix";
+    };
   };
 
   # ─── Reverse Mapping: filename -> module id ───────────────────────────────

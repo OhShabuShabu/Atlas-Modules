@@ -22,6 +22,7 @@
       gpu-intel     = import ./modules/nixos/gpu-intel.nix;
       gpu-nvidia    = import ./modules/nixos/gpu-nvidia.nix;
 
+      odysseus     = import ./modules/nixos/odysseus.nix;
       security      = import ./modules/nixos/security.nix;
       shell         = import ./modules/nixos/shell.nix;
       fonts         = import ./modules/nixos/fonts.nix;

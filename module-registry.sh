@@ -12,7 +12,7 @@
 readonly ATLAS_MODULES_RAW_URL="https://raw.githubusercontent.com/OhShabuShabu/Atlas-Modules/main"
 
 # Module IDs
-readonly MODULE_IDS=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19)
+readonly MODULE_IDS=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
 
 # Module descriptions (one-line summary for UI display)
 readonly MODULE_DESC=(
@@ -35,6 +35,7 @@ readonly MODULE_DESC=(
   [17]="shell             ZSH with OhMyZsh, Starship prompt"
   [18]="fonts             Fonts including Nerd Fonts"
   [19]="media             Media codecs, VA-API, VLC, FFmpeg"
+  [20]="odysseus          Odysseus self-hosted AI workspace"
 )
 
 # Relative file path within the atlas-modules repository
@@ -58,6 +59,7 @@ readonly MODULE_FILE=(
   [17]="modules/nixos/shell.nix"
   [18]="modules/nixos/fonts.nix"
   [19]="modules/nixos/media.nix"
+  [20]="modules/nixos/odysseus.nix"
 )
 
 # Subdirectory: "nixos" for system modules, "home" for home-manager
@@ -81,6 +83,7 @@ readonly MODULE_SUBDIR=(
   [17]="nixos"
   [18]="nixos"
   [19]="nixos"
+  [20]="nixos"
 )
 
 # Module categories for grouping in the UI
@@ -104,6 +107,7 @@ readonly MODULE_CATEGORY=(
   [17]="system"
   [18]="system"
   [19]="system"
+  [20]="services"
 )
 
 # Module tags for filtering (space-separated)
@@ -127,6 +131,7 @@ readonly MODULE_TAGS=(
   [17]="shell zsh terminal prompt"
   [18]="fonts typography nerdfonts"
   [19]="media codecs video audio playback"
+  [20]="ai workspace docker chat agents"
 )
 
 # Module dependencies (space-separated module IDs)
@@ -150,6 +155,7 @@ readonly MODULE_DEPS=(
   [17]=""
   [18]=""
   [19]=""
+  [20]=""
 )
 
 # Module descriptions (long form for preview/help)
@@ -173,6 +179,7 @@ readonly MODULE_INFO=(
   [17]="Shell customization: ZSH with OhMyZsh plugins (git, sudo, extract), syntax highlighting, autosuggestions, Starship prompt, zoxide directory jumper, and thefuck command correction."
   [18]="Font configuration: Inter, Noto Fonts (CJK/Emoji), JetBrains Mono, Fira Code, and optional Nerd Fonts patched variants with proper fontconfig defaults."
   [19]="Media codecs and playback: FFmpeg with hardware acceleration, VLC/mpv/imv players, Intel/Radeon VA-API drivers, and thumbnail generation."
+  [20]="Odysseus: Docker-based AI workspace with chat, agents, deep research, email, memory, and RAG. Runs with chromadb, searxng, and ntfy support services."
 )
 
 # Module versions (semver)
@@ -196,12 +203,13 @@ readonly MODULE_VERSION=(
   [17]="1.0.0"
   [18]="1.0.0"
   [19]="1.0.0"
+  [20]="1.0.0"
 )
 
 # ============================================================================
 # Categories (grouped module IDs)
 # ============================================================================
-readonly MODULE_CATEGORIES=("system" "privacy" "gaming" "virtualisation" "development" "tools" "extras" "creative" "hardware" "security")
+readonly MODULE_CATEGORIES=("system" "privacy" "gaming" "virtualisation" "development" "tools" "extras" "creative" "hardware" "security" "services")
 
 # ============================================================================
 # Helper Functions
