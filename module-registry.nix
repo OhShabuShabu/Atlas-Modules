@@ -1,11 +1,11 @@
 # ============================================================================
 # ATLAS MODULE REGISTRY (Nix)
 # ============================================================================
-# Central metadata for all Atlas modules.
+# Shared module metadata for both installer and post-install module manager.
 # Keep in sync with module-registry.sh
 #
 # Usage:
-#   let registry = import ./module-registry.nix;
+#   let registry = import ../../lib/module-registry.nix;
 #   in registry.modules  # attrset
 # ============================================================================
 
@@ -13,10 +13,13 @@ let
   baseUrl = "https://raw.githubusercontent.com/OhShabuShabu/Atlas-Modules/main";
   moduleDir = type: "modules/${type}/";
 
+  stateFilePath = "/persistent/etc/atlas-modules/state.json";
+  stateDir = "/persistent/etc/atlas-modules";
+
   modules = {
     "1" = {
       name = "performance";
-      description = "CPU governor, TCP BBR, Nix GC tuning";
+      description = "CPU governor, TCP BBR, Nix GC tuning, ZRAM";
       info = "Performance tuning: sets CPU governor to performance, enables TCP BBR congestion control, tunes Nix garbage collection, and enables ZRAM compressed swap for improved responsiveness.";
       file = "performance.nix";
       subdir = "nixos";
@@ -25,6 +28,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}performance.nix";
+      icon = "⚡";
+      requirements = "RAM: 512MB | Disk: 100MB";
     };
 
     "2" = {
@@ -38,6 +43,8 @@ let
       deps = [ ];
       version = "1.1.0";
       url = "${baseUrl}/${moduleDir "nixos"}privacy.nix";
+      icon = "🛡️";
+      requirements = "RAM: 256MB | Disk: 2GB | Network: Mullvad subscription";
     };
 
     "3" = {
@@ -51,6 +58,8 @@ let
       deps = [ "8" ];
       version = "2.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}gaming.nix";
+      icon = "🎮";
+      requirements = "RAM: 4GB | Disk: 20GB | GPU: 3D-capable";
     };
 
     "4" = {
@@ -64,6 +73,8 @@ let
       deps = [ ];
       version = "1.1.0";
       url = "${baseUrl}/${moduleDir "nixos"}virtualisation.nix";
+      icon = "🖥️";
+      requirements = "RAM: 2GB | Disk: 5GB | CPU: KVM-capable (EPT/SVM)";
     };
 
     "5" = {
@@ -77,6 +88,8 @@ let
       deps = [ "3" ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}minecraft.nix";
+      icon = "⛏️";
+      requirements = "RAM: 2GB | Disk: 5GB | Depends: gaming module";
     };
 
     "6" = {
@@ -90,6 +103,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}flatpak.nix";
+      icon = "📦";
+      requirements = "RAM: 128MB | Disk: 500MB";
     };
 
     "7" = {
@@ -103,6 +118,8 @@ let
       deps = [ ];
       version = "2.0.0";
       url = "${baseUrl}/${moduleDir "home"}dev.nix";
+      icon = "💻";
+      requirements = "RAM: 1GB | Disk: 3GB";
     };
 
     "8" = {
@@ -116,6 +133,8 @@ let
       deps = [ ];
       version = "1.1.0";
       url = "${baseUrl}/${moduleDir "home"}tools.nix";
+      icon = "🔧";
+      requirements = "RAM: 256MB | Disk: 500MB";
     };
 
     "9" = {
@@ -129,6 +148,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}extras.nix";
+      icon = "🧠";
+      requirements = "RAM: 8GB | Disk: 10GB | GPU: ROCm-compatible AMD";
     };
 
     "10" = {
@@ -142,6 +163,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}bluetooth.nix";
+      icon = "📡";
+      requirements = "RAM: 64MB | Disk: 50MB | Hardware: Bluetooth adapter";
     };
 
     "11" = {
@@ -155,6 +178,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}pdf.nix";
+      icon = "📄";
+      requirements = "RAM: 256MB | Disk: 1GB";
     };
 
     "12" = {
@@ -168,6 +193,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}art.nix";
+      icon = "🎨";
+      requirements = "RAM: 2GB | Disk: 5GB | GPU: OpenGL 3.3+";
     };
 
     "13" = {
@@ -181,6 +208,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}gpu-amd.nix";
+      icon = "🟥";
+      requirements = "RAM: 64MB | Disk: 100MB | GPU: AMD Radeon";
     };
 
     "14" = {
@@ -194,6 +223,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}gpu-intel.nix";
+      icon = "🟦";
+      requirements = "RAM: 64MB | Disk: 100MB | GPU: Intel integrated";
     };
 
     "15" = {
@@ -207,6 +238,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}gpu-nvidia.nix";
+      icon = "🟩";
+      requirements = "RAM: 64MB | Disk: 200MB | GPU: NVIDIA";
     };
 
     "16" = {
@@ -220,6 +253,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}security.nix";
+      icon = "🔒";
+      requirements = "RAM: 128MB | Disk: 100MB";
     };
 
     "17" = {
@@ -233,11 +268,13 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}shell.nix";
+      icon = "⌨️";
+      requirements = "RAM: 256MB | Disk: 200MB";
     };
 
     "18" = {
       name = "fonts";
-      description = "Fonts including Nerd Fonts patched fonts";
+      description = "Fonts including Nerd Fonts";
       info = "Font configuration: Inter, Noto Fonts (CJK/Emoji), JetBrains Mono, Fira Code, and optional Nerd Fonts patched variants with proper fontconfig defaults.";
       file = "fonts.nix";
       subdir = "nixos";
@@ -246,12 +283,14 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}fonts.nix";
+      icon = "🔤";
+      requirements = "RAM: 64MB | Disk: 2GB";
     };
 
     "19" = {
       name = "media";
       description = "Media codecs, VA-API, VLC, FFmpeg";
-      info = "Media codecs and playback: FFmpeg with hardware acceleration, VLC/mpv/ imv players, Intel/Radeon VA-API drivers, and thumbnail generation.";
+      info = "Media codecs and playback: FFmpeg with hardware acceleration, VLC/mpv/imv players, Intel/Radeon VA-API drivers, and thumbnail generation.";
       file = "media.nix";
       subdir = "nixos";
       category = "system";
@@ -259,6 +298,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}media.nix";
+      icon = "🎬";
+      requirements = "RAM: 512MB | Disk: 500MB | GPU: VA-API capable";
     };
 
     "20" = {
@@ -272,6 +313,8 @@ let
       deps = [ ];
       version = "1.0.0";
       url = "${baseUrl}/${moduleDir "nixos"}odysseus.nix";
+      icon = "🤖";
+      requirements = "RAM: 4GB | Disk: 2GB | Runtime: Docker";
     };
   };
 
@@ -291,6 +334,9 @@ let
             existing = acc.${cat} or [ ];
         in acc // { ${cat} = existing ++ [ id ]; };
     in builtins.foldl' addToCategory { } (builtins.attrNames modules);
+
+  # ─── Read Module State ──────────────────────────────────────────────────
+  readModuleState = { };
 
   # ─── Helper: is module enabled? ─────────────────────────────────────────
   isEnabled = state: id:
@@ -349,16 +395,24 @@ let
         subdir = mod.subdir;
         inherit enabled;
         deps = mod.deps;
+        icon = mod.icon or "";
+        requirements = mod.requirements or "";
       }
     ) (builtins.attrNames modules);
+
+  # ─── Module path helpers ───────────────────────────────────────────────
+  getModulePath = subdir: filename:
+    let baseDir = ./.;
+    in baseDir + "/../modules/optional/${subdir}/${filename}";
 
 in {
   inherit
     modules filenameToId modulesByCategory
-    isEnabled shouldImportFile
+    stateFilePath stateDir
+    readModuleState isEnabled shouldImportFile
     getEnabledIds getDisabledIds
     validateDeps getReverseDeps
-    generateStateSummary
+    generateStateSummary getModulePath
     ;
   moduleIds = builtins.sort builtins.lessThan (builtins.attrNames modules);
   categories = builtins.attrNames modulesByCategory;
