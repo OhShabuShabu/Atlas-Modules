@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================================
-# ATLAS MODULE REGISTRY (Bash)
+# yorha module REGISTRY (Bash)
 # ============================================================================
 # Shared module metadata for both installer and post-install module manager.
 # Keep in sync with module-registry.nix
@@ -9,7 +9,7 @@
 # ============================================================================
 
 # Raw URL for module downloads
-readonly ATLAS_MODULES_RAW_URL="https://raw.githubusercontent.com/OhShabuShabu/Atlas-Modules/main"
+readonly YORHA_MODULES_RAW_URL="https://raw.githubusercontent.com/OhShabuShabu/Atlas-Modules/main"
 
 # ============================================================================
 # SECTION 1: Base Module Metadata
@@ -20,7 +20,7 @@ readonly ATLAS_MODULES_RAW_URL="https://raw.githubusercontent.com/OhShabuShabu/A
 # ============================================================================
 
 # Module IDs
-MODULE_IDS=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19)
+MODULE_IDS=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
 
 # Module icons (Unicode symbols for TUI display)
 MODULE_ICON=(
@@ -52,9 +52,10 @@ MODULE_DESC=(
   [17]="shell             ZSH with OhMyZsh, Starship prompt"
   [18]="fonts             Fonts including Nerd Fonts"
   [19]="media             Media codecs, VA-API, VLC, FFmpeg"
+  [20]="odysseus          Odysseus self-hosted AI workspace"
 )
 
-# Relative file path within the atlas-modules repository
+# Relative file path within the yorha-modules repository
 MODULE_FILE=(
   [1]="modules/nixos/performance.nix"
   [2]="modules/nixos/privacy.nix"
@@ -75,6 +76,7 @@ MODULE_FILE=(
   [17]="modules/nixos/shell.nix"
   [18]="modules/nixos/fonts.nix"
   [19]="modules/nixos/media.nix"
+  [20]="modules/nixos/odysseus.nix"
 )
 
 # Subdirectory: "nixos" for system modules, "home" for home-manager modules
@@ -98,6 +100,7 @@ MODULE_SUBDIR=(
   [17]="nixos"
   [18]="nixos"
   [19]="nixos"
+  [20]="nixos"
 )
 
 # Module categories for grouping in the UI
@@ -121,6 +124,7 @@ MODULE_CATEGORY=(
   [17]="system"
   [18]="system"
   [19]="system"
+  [20]="services"
 )
 
 # Module tags for filtering (space-separated)
@@ -144,6 +148,7 @@ MODULE_TAGS=(
   [17]="shell zsh terminal prompt"
   [18]="fonts typography nerdfonts"
   [19]="media codecs video audio playback"
+  [20]="ai workspace docker chat agents"
 )
 
 # Module dependencies (space-separated module IDs)
@@ -167,6 +172,7 @@ MODULE_DEPS=(
   [17]=""
   [18]=""
   [19]=""
+  [20]=""
 )
 
 # Module descriptions (long form for preview/help)
@@ -190,6 +196,7 @@ MODULE_INFO=(
   [17]="Shell customization: ZSH with OhMyZsh plugins (git, sudo, extract), syntax highlighting, autosuggestions, Starship prompt, zoxide directory jumper, and thefuck command correction."
   [18]="Font configuration: Inter, Noto Fonts (CJK/Emoji), JetBrains Mono, Fira Code, and optional Nerd Fonts patched variants with proper fontconfig defaults."
   [19]="Media codecs and playback: FFmpeg with hardware acceleration, VLC/mpv/imv players, Intel/Radeon VA-API drivers, and thumbnail generation."
+  [20]="Odysseus: Docker-based AI workspace with chat, agents, deep research, email, memory, and RAG. Runs with chromadb, searxng, and ntfy support services."
 )
 
 # Module versions (semver)
@@ -213,6 +220,7 @@ MODULE_VERSION=(
   [17]="1.0.0"
   [18]="1.0.0"
   [19]="1.0.0"
+  [20]="1.0.0"
 )
 
 # Module system requirements (RAM, storage, hardware, etc.)
@@ -251,16 +259,20 @@ MODULE_REQUIREMENTS=(
 
 readonly GITHUB_MODULES_API="${GITHUB_MODULES_API:-https://api.github.com/repos/OhShabuShabu/Atlas-Modules/contents/modules}"
 
+# Build filename-to-ID lookup table for O(1) lookups
+_build_file_index() {
+  declare -gA MODULE_FILE_INDEX
+  local __id
+  for __id in "${MODULE_IDS[@]}"; do
+    MODULE_FILE_INDEX["${MODULE_FILE[$__id]:-}"]="$__id"
+  done
+}
+
 # Check if a given filename+subdir is already in the registry
 _is_known_file() {
   local filename="$1" subdir="$2"
   local expected="modules/$subdir/$filename"
-  for __id in "${MODULE_IDS[@]}"; do
-    if [[ "${MODULE_FILE[$__id]:-}" == "$expected" ]]; then
-      return 0
-    fi
-  done
-  return 1
+  [[ -n "${MODULE_FILE_INDEX[$expected]:-}" ]]
 }
 
 # Add a dynamically discovered module to the registry arrays
@@ -278,7 +290,7 @@ _add_dynamic_module() {
   MODULE_REQUIREMENTS[$id]="RAM: varies | Disk: varies"
 
   local desc="Auto-discovered module"
-  local info="Auto-discovered module $name from the Atlas-Modules repository. Install using: atlas-module install $id"
+  local info="Auto-discovered module $name from the Atlas-Modules repository. Install using: yorha-module install $id"
   local icon="🧩"
   local reqs="RAM: varies | Disk: varies"
 
@@ -367,8 +379,8 @@ discover_remote_catalog() {
 # ============================================================================
 # Module State File Path
 # ============================================================================
-ATLAS_MODULE_STATE_DIR="${ATLAS_MODULE_STATE_DIR:-/persistent/etc/atlas-modules}"
-ATLAS_MODULE_STATE_FILE="${ATLAS_MODULE_STATE_FILE:-$ATLAS_MODULE_STATE_DIR/state.json}"
+YORHA_MODULE_STATE_DIR="${YORHA_MODULE_STATE_DIR:-/persistent/etc/yorha-modules}"
+YORHA_MODULE_STATE_FILE="${YORHA_MODULE_STATE_FILE:-$YORHA_MODULE_STATE_DIR/state.json}"
 
 # ============================================================================
 # Categories (grouped module IDs) — rebuilt dynamically from MODULE_CATEGORY
@@ -392,9 +404,9 @@ _build_categories_list
 
 # Ensure state file and directory exist with default structure
 ensure_state() {
-  if [[ ! -f "$ATLAS_MODULE_STATE_FILE" ]]; then
-    mkdir -p "$ATLAS_MODULE_STATE_DIR"
-    cat > "$ATLAS_MODULE_STATE_FILE" <<EOF
+  if [[ ! -f "$YORHA_MODULE_STATE_FILE" ]]; then
+    mkdir -p "$YORHA_MODULE_STATE_DIR"
+    cat > "$YORHA_MODULE_STATE_FILE" <<EOF
 {
   "modules": {},
   "metadata": {
@@ -410,7 +422,7 @@ EOF
 # Read module state from state file, return JSON for modules
 read_state() {
   ensure_state
-  jq -c '.modules' "$ATLAS_MODULE_STATE_FILE" 2>/dev/null || echo "{}"
+  jq -c '.modules' "$YORHA_MODULE_STATE_FILE" 2>/dev/null || echo "{}"
 }
 
 # Write module state to state file atomically
@@ -419,7 +431,7 @@ write_state() {
   jq --arg now "$(date -Iseconds)" \
      --argjson modules "$modules_json" \
      '.modules = $modules | .metadata.updated = $now' \
-     "$ATLAS_MODULE_STATE_FILE" > "${ATLAS_MODULE_STATE_FILE}.tmp" && mv "${ATLAS_MODULE_STATE_FILE}.tmp" "$ATLAS_MODULE_STATE_FILE"
+     "$YORHA_MODULE_STATE_FILE" > "${YORHA_MODULE_STATE_FILE}.tmp" && mv "${YORHA_MODULE_STATE_FILE}.tmp" "$YORHA_MODULE_STATE_FILE"
 }
 
 # ============================================================================
@@ -430,8 +442,8 @@ write_state() {
 # Usage: get_module_dir <subdir>
 get_module_dir() {
   local subdir="$1"
-  local base="${ATLAS_MODULES_BASE:-$(cd "$(dirname "$0")/../.." && pwd)}"
-  echo "$base/files/modules/optional/$subdir"
+  local base="${YORHA_MODULES_BASE:-$(cd "$(dirname "$0")" && pwd)}"
+  echo "$base/modules/$subdir"
 }
 
 # Get module short name from description
@@ -509,7 +521,7 @@ validate_deps() {
   [[ $issues -eq 0 ]]
 }
 
-# Download a single module from the atlas-modules repository
+# Download a single module from the yorha-modules repository
 # Usage: download_module <id> <dest_dir>
 download_module() {
   local id="$1"
@@ -517,7 +529,7 @@ download_module() {
   local file="${MODULE_FILE[$id]:-}"
   [[ -z "$file" ]] && return 1
   local filename; filename=$(basename "$file")
-  local url="$ATLAS_MODULES_RAW_URL/$file"
+  local url="$YORHA_MODULES_RAW_URL/$file"
 
   mkdir -p "$dest_dir"
 
@@ -580,6 +592,9 @@ fetch_remote_registry() {
   return 1
 }
 
+# Build file index for O(1) lookups on startup
+_build_file_index
+
 # Auto-fetch remote registry and auto-discover modules on source
 # Disable with: REMOTE_REGISTRY_SKIP=1
 if [[ -z "${REMOTE_REGISTRY_SKIP:-}" && -z "${REMOTE_DISCOVERY_SKIP:-}" ]]; then
@@ -589,4 +604,6 @@ if [[ -z "${REMOTE_REGISTRY_SKIP:-}" && -z "${REMOTE_DISCOVERY_SKIP:-}" ]]; then
   discover_remote_catalog 2>/dev/null || true
   # Rebuild the categories list in case new categories were added
   _build_categories_list 2>/dev/null || true
+  # Rebuild file index in case new modules were added via discovery
+  _build_file_index 2>/dev/null || true
 fi

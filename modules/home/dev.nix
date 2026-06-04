@@ -1,27 +1,24 @@
-# ============================================================================
-# MODULE: dev
-# CATEGORY: development
-# VERSION: 2.0.0
-# TAGS: dev neovim vscode editor bun opencode
-# DEPS: none
-# INFO: Development tools: Neovim with LazyVim, VSCodium, bun, opencode
-# ============================================================================
-{ pkgs, ... }:
+{ lib, ... }: {
+  flake.modules.homeManager.dev = { pkgs, lib, config, ... }: {
+    options.yorha.modules.dev = {
+      enable = lib.mkEnableOption "development tools";
+    };
 
-{
-  home.packages = with pkgs; [
-    neovim
-    vscodium
-    bun
-    opencode
-    nodejs
-    nodePackages.typescript
-    nodePackages.prettier
-    nodePackages.eslint
-    git
-    gh
-    lazygit
-    delta
-    github-cli
-  ];
+    config = lib.mkIf config.yorha.modules.dev.enable {
+      home.packages = with pkgs; [
+        neovim
+        vscodium
+        bun
+        opencode
+        nodejs
+        nodePackages.typescript
+        nodePackages.prettier
+        nodePackages.eslint
+        git
+        gh
+        lazygit
+        delta
+      ];
+    };
+  };
 }

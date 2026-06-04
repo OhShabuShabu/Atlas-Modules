@@ -1,43 +1,35 @@
-# ============================================================================
-# MODULE: tools
-# CATEGORY: tools
-# VERSION: 1.1.0
-# TAGS: media downloader tools utilities
-# DEPS: none
-# INFO: Core CLI utilities: yt-dlp, mpv, btop, ripgrep, bat, and more
-# ============================================================================
-{ pkgs, ... }:
+{ lib, ... }: {
+  flake.modules.homeManager.tools = { pkgs, lib, config, ... }: {
+    options.yorha.modules.tools = {
+      enable = lib.mkEnableOption "core CLI utilities";
+    };
 
-{
-  home.packages = with pkgs; [
-    python3Packages.requests
-    yt-dlp
-    mpv
+    config = lib.mkIf config.yorha.modules.tools.enable {
+      home.packages = with pkgs; [
+        python3Packages.requests
+        yt-dlp
+        mpv
 
-    # System monitoring
-    btop
-    htop
+        btop
+        htop
 
-    # File search & navigation
-    ripgrep
-    fd
-    fzf
+        ripgrep
+        fd
+        fzf
 
-    # File viewing & formatting
-    bat
-    eza
-    jq
+        bat
+        eza
+        jq
 
-    # Compression / extraction
-    unzip
-    unrar
-    p7zip
+        unzip
+        unrar
+        p7zip
 
-    # Networking
-    wget2
-    curl
+        wget2
+        curl
 
-    # System info
-    fastfetch
-  ];
+        fastfetch
+      ];
+    };
+  };
 }

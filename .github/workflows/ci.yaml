@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Run nix flake check (lint + eval)
+        run: nix flake check --show-trace
+      - name: Lint with statix
+        run: nix develop --command statix check
+      - name: Check for dead code with deadnix
+        run: nix develop --command deadnix --fail ./. --exclude flake.lock
+      - name: Check formatting
+        run: nix fmt -- --check
+      - name: Shellcheck module-registry.sh
+        run: nix develop --command shellcheck module-registry.sh

@@ -1,14 +1,12 @@
-# ============================================================================
-# MODULE: gpu-amd
-# CATEGORY: hardware
-# VERSION: 1.0.0
-# TAGS: gpu amd initrd plymouth
-# DEPS: none
-# INFO: Load amdgpu in initrd for Plymouth KMS at native resolution
-# ============================================================================
-{ lib, ... }:
+{ lib, ... }: {
+  flake.modules.nixos.gpu-amd = { lib, config, ... }: {
+    options.yorha.modules.gpu-amd = {
+      enable = lib.mkEnableOption "AMD GPU initrd kernel module";
+    };
 
-{
-  boot.initrd.kernelModules = [ "amdgpu" ];
-  boot.initrd.availableKernelModules = [ "amdgpu" ];
+    config = lib.mkIf config.yorha.modules.gpu-amd.enable {
+      boot.initrd.kernelModules = [ "amdgpu" ];
+      boot.initrd.availableKernelModules = [ "amdgpu" ];
+    };
+  };
 }

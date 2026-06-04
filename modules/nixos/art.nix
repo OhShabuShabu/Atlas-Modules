@@ -1,18 +1,16 @@
-# ============================================================================
-# MODULE: art
-# CATEGORY: creative
-# VERSION: 1.0.0
-# TAGS: art drawing painting creative
-# DEPS: none
-# INFO: Digital art and creative tools
-# ============================================================================
-{ pkgs, ... }:
+{ lib, ... }: {
+  flake.modules.nixos.art = { pkgs, lib, config, ... }: {
+    options.yorha.modules.art = {
+      enable = lib.mkEnableOption "digital art and creative tools";
+    };
 
-{
-  environment.systemPackages = with pkgs; [
-    krita
-    inkscape
-    gimp
-    obs-studio
-  ];
+    config = lib.mkIf config.yorha.modules.art.enable {
+      environment.systemPackages = with pkgs; [
+        krita
+        inkscape
+        gimp
+        obs-studio
+      ];
+    };
+  };
 }

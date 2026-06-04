@@ -1,14 +1,12 @@
-# ============================================================================
-# MODULE: gpu-intel
-# CATEGORY: hardware
-# VERSION: 1.0.0
-# TAGS: gpu intel initrd plymouth
-# DEPS: none
-# INFO: Load i915 in initrd for Plymouth KMS at native resolution
-# ============================================================================
-{ lib, ... }:
+{ lib, ... }: {
+  flake.modules.nixos.gpu-intel = { lib, config, ... }: {
+    options.yorha.modules.gpu-intel = {
+      enable = lib.mkEnableOption "Intel GPU initrd kernel module";
+    };
 
-{
-  boot.initrd.kernelModules = [ "i915" ];
-  boot.initrd.availableKernelModules = [ "i915" ];
+    config = lib.mkIf config.yorha.modules.gpu-intel.enable {
+      boot.initrd.kernelModules = [ "i915" ];
+      boot.initrd.availableKernelModules = [ "i915" ];
+    };
+  };
 }

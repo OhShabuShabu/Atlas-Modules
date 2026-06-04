@@ -1,24 +1,22 @@
-# ============================================================================
-# MODULE: bluetooth
-# CATEGORY: system
-# VERSION: 1.0.0
-# TAGS: bluetooth bluez blueman
-# DEPS: none
-# INFO: Bluetooth with experimental features and GUI manager
-# ============================================================================
-{ pkgs, ... }:
+{ lib, ... }: {
+  flake.modules.nixos.bluetooth = { pkgs, lib, config, ... }: {
+    options.yorha.modules.bluetooth = {
+      enable = lib.mkEnableOption "Bluetooth support with Blueman";
+    };
 
-{
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-    settings.General.Experimental = true;
+    config = lib.mkIf config.yorha.modules.bluetooth.enable {
+      hardware.bluetooth = {
+        enable = true;
+        powerOnBoot = true;
+        settings.General.Experimental = true;
+      };
+
+      services.blueman.enable = true;
+
+      environment.systemPackages = with pkgs; [
+        bluez
+        bluez-tools
+      ];
+    };
   };
-
-  services.blueman.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    bluez
-    bluez-tools
-  ];
 }

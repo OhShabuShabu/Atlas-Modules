@@ -1,14 +1,21 @@
-# ============================================================================
-# MODULE: gpu-nvidia
-# CATEGORY: hardware
-# VERSION: 1.0.0
-# TAGS: gpu nvidia initrd plymouth
-# DEPS: none
-# INFO: Load nouveau in initrd for Plymouth KMS at native resolution
-# ============================================================================
-{ lib, ... }:
+{ lib, ... }: {
+  flake.modules.nixos.gpu-nvidia = { lib, config, ... }: {
+    options.yorha.modules.gpu-nvidia = {
+      enable = lib.mkEnableOption "NVIDIA GPU initrd kernel module";
+      useProprietary = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Use proprietary NVIDIA driver instead of nouveau for initrd";
+      };
+    };
 
-{
-  boot.initrd.kernelModules = [ "nouveau" ];
-  boot.initrd.availableKernelModules = [ "nouveau" ];
+    config = lib.mkIf config.yorha.modules.gpu-nvidia.enable {
+      boot.initrd.kernelModules = if config.yorha.modules.gpu-nvidia.useProprietary
+        then [ "nvidia" "nvidia_modeset" "nvidia_drm" ]
+        else [ "nouveau" ];
+      boot.initrd.availableKernelModules = if config.yorha.modules.gpu-nvidia.useProprietary
+        then [ "nvidia" "nvidia_modeset" "nvidia_drm" ]
+        else [ "nouveau" ];
+    };
+  };
 }

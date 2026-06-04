@@ -2,6 +2,9 @@
 result*
 .direnv/
 
+# flake.lock MUST be committed for reproducibility
+# *.lock
+
 # Editor
 *.swp
 *.swo

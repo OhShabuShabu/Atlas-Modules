@@ -1,15 +1,13 @@
-# ============================================================================
-# MODULE: pdf
-# CATEGORY: system
-# VERSION: 1.0.0
-# TAGS: pdf document viewer ocr
-# DEPS: none
-# INFO: PDF readers, editors, converters, and OCR tools
-# ============================================================================
-{ pkgs, ... }:
+{ lib, ... }: {
+  flake.modules.nixos.pdf = { pkgs, lib, config, ... }: {
+    options.yorha.modules.pdf = {
+      enable = lib.mkEnableOption "PDF and document tools";
+    };
 
-{
-  environment.systemPackages = with pkgs; [
-    zathura evince pdfarranger poppler_utils qpdf pandoc tesseract
-  ];
+    config = lib.mkIf config.yorha.modules.pdf.enable {
+      environment.systemPackages = with pkgs; [
+        zathura evince pdfarranger poppler_utils qpdf pandoc tesseract
+      ];
+    };
+  };
 }

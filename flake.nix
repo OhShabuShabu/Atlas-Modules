@@ -1,41 +1,50 @@
 {
-  description = "Atlas optional NixOS modules — gaming, privacy, dev tools, performance, and more";
+  description = "YoRHa optional NixOS modules — gaming, privacy, dev tools, performance, and more";
+
+  nixConfig = {
+    extra-substituters = [ "https://yorha-modules.cachix.org" ];
+    extra-trusted-public-keys = [ "yorha-modules.cachix.org-1:BbHyrb3n3/GQjAmi/ZFrqJQVGMsBRpGBYgIdBfUvEUo=" ];
+  };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    haumea.url = "github:nix-community/haumea/v0.2.2";
+    haumea.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs }: {
-    nixosModules = {
-      performance   = import ./modules/nixos/performance.nix;
-      privacy       = import ./modules/nixos/privacy.nix;
-      gaming        = import ./modules/nixos/gaming.nix;
-      virtualisation = import ./modules/nixos/virtualisation.nix;
-      minecraft     = import ./modules/nixos/minecraft.nix;
-      flatpak       = import ./modules/nixos/flatpak.nix;
-      bluetooth     = import ./modules/nixos/bluetooth.nix;
-      pdf           = import ./modules/nixos/pdf.nix;
-      art           = import ./modules/nixos/art.nix;
-      extras        = import ./modules/nixos/extras.nix;
-
-      gpu-amd       = import ./modules/nixos/gpu-amd.nix;
-      gpu-intel     = import ./modules/nixos/gpu-intel.nix;
-      gpu-nvidia    = import ./modules/nixos/gpu-nvidia.nix;
-
-      odysseus     = import ./modules/nixos/odysseus.nix;
-      security      = import ./modules/nixos/security.nix;
-      shell         = import ./modules/nixos/shell.nix;
-      fonts         = import ./modules/nixos/fonts.nix;
-      media         = import ./modules/nixos/media.nix;
-
-      default = import ./modules/nixos/default.nix;
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        ./flake-modules/systems.nix
+        ./flake-modules/flake-parts.nix
+        ./flake-modules/per-system.nix
+        ./flake-modules/lib.nix
+        ./flake-modules/modules.nix
+        ./modules/nixos/art.nix
+        ./modules/nixos/bluetooth.nix
+        ./modules/nixos/extras.nix
+        ./modules/nixos/flatpak.nix
+        ./modules/nixos/fonts.nix
+        ./modules/nixos/gaming.nix
+        ./modules/nixos/gpu-amd.nix
+        ./modules/nixos/gpu-intel.nix
+        ./modules/nixos/gpu-nvidia.nix
+        ./modules/nixos/media.nix
+        ./modules/nixos/minecraft.nix
+        ./modules/nixos/notifications.nix
+        ./modules/nixos/odysseus.nix
+        ./modules/nixos/pdf.nix
+        ./modules/nixos/performance.nix
+        ./modules/nixos/privacy.nix
+        ./modules/nixos/security.nix
+        ./modules/nixos/shell.nix
+        ./modules/nixos/virtualisation.nix
+        ./modules/nixos/default.nix
+        ./modules/home/dev.nix
+        ./modules/home/tools.nix
+        ./modules/home/default.nix
+      ];
     };
-
-    homeModules = {
-      dev   = import ./modules/home/dev.nix;
-      tools = import ./modules/home/tools.nix;
-
-      default = import ./modules/home/default.nix;
-    };
-  };
 }

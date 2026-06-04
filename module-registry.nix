@@ -1,5 +1,5 @@
 # ============================================================================
-# ATLAS MODULE REGISTRY (Nix)
+# YORHA MODULE REGISTRY (Nix)
 # ============================================================================
 # Shared module metadata for both installer and post-install module manager.
 # Keep in sync with module-registry.sh
@@ -13,8 +13,8 @@ let
   baseUrl = "https://raw.githubusercontent.com/OhShabuShabu/Atlas-Modules/main";
   moduleDir = type: "modules/${type}/";
 
-  stateFilePath = "/persistent/etc/atlas-modules/state.json";
-  stateDir = "/persistent/etc/atlas-modules";
+  stateFilePath = "/persistent/etc/yorha-modules/state.json";
+  stateDir = "/persistent/etc/yorha-modules";
 
   modules = {
     "1" = {
@@ -336,7 +336,9 @@ let
     in builtins.foldl' addToCategory { } (builtins.attrNames modules);
 
   # ─── Read Module State ──────────────────────────────────────────────────
-  readModuleState = { };
+  readModuleState = builtins.tryEval (
+    builtins.fromJSON (builtins.readFile stateFilePath)
+  ).value.modules or { };
 
   # ─── Helper: is module enabled? ─────────────────────────────────────────
   isEnabled = state: id:
@@ -403,7 +405,7 @@ let
   # ─── Module path helpers ───────────────────────────────────────────────
   getModulePath = subdir: filename:
     let baseDir = ./.;
-    in baseDir + "/../modules/optional/${subdir}/${filename}";
+    in baseDir + "/modules/${subdir}/${filename}";
 
 in {
   inherit

@@ -1,17 +1,15 @@
-# ============================================================================
-# MODULE: minecraft
-# CATEGORY: gaming
-# VERSION: 1.0.0
-# TAGS: minecraft prism launcher
-# DEPS: gaming
-# INFO: PrismLauncher, Blockbench, MCEdit-like region editor
-# ============================================================================
-{ pkgs, ... }:
+{ lib, ... }: {
+  flake.modules.nixos.minecraft = { pkgs, lib, config, ... }: {
+    options.yorha.modules.minecraft = {
+      enable = lib.mkEnableOption "Minecraft development tools";
+    };
 
-{
-  environment.systemPackages = with pkgs; [
-    prismlauncher
-    blockbench
-    mcaselector
-  ];
+    config = lib.mkIf config.yorha.modules.minecraft.enable {
+      environment.systemPackages = with pkgs; [
+        prismlauncher
+        blockbench
+        mcaselector
+      ];
+    };
+  };
 }
